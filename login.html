@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="MFitness reponsive webite build using HTML5, CSS3 and Javascript The complete layout of the page is build using grid layout and flexbox with some cool animations."
+    />
+    <title>Responsive Gym Website Template</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+
+    <style>
+        /* Registration Form Styling */
+        form#loginForm {
+            max-width: 400px;
+            margin: 10rem auto;
+            padding: 3rem;
+            background-color: var(--color-black-light);
+            border: 1px solid var(--color-yellow-light);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        form#loginForm input {
+            display: block;
+            width: 100%;
+            margin-bottom: 1.5rem;
+            padding: 0.8rem;
+            font-size: 1.6rem;
+            border: none;
+            border-bottom: 2px solid var(--color-yellow-light);
+            border-radius: 3px;
+            background-color: transparent;
+            color: #fff;
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+
+        form#loginForm input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        form#loginForm input:focus {
+            outline: none;
+            border-color: var(--color-yellow);
+            background-color: var(--color-black);
+        }
+
+        form#loginForm button {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.6rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--color-yellow);
+            color: var(--color-black);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        form#loginForm button:hover {
+            background-color: var(--color-yellow-dark);
+        }
+
+        /* For a full-page background image */
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url('https://i.pinimg.com/originals/78/d1/c4/78d1c4f7a227cee976d4eec4561f9b7d.jpg'); /* Path to your image */
+    background-size: cover; /* Ensures the image covers the entire background */
+    background-repeat: no-repeat; /* Prevents tiling */
+    background-position: center; /* Centers the image */
+    height: 100vh; /* Sets the height to fill the viewport */
+}
+
+/* For a section with a background image */
+section.hero {
+    background-image: url('https://i.pinimg.com/originals/78/d1/c4/78d1c4f7a227cee976d4eec4561f9b7d.jpg'); /* Path to your image */
+    background-size: cover; /* Ensures the image adapts responsively */
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    height: auto; /* Adjusts height automatically based on content */
+    min-height: 50vh; /* Ensures a minimum height for the section */
+    display: flex; /* Optional: For centering content inside */
+    align-items: center; /* Optional: Vertical alignment of content */
+    justify-content: center; /* Optional: Horizontal alignment of content */
+    color: #fff; /* For text contrast over the image */
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7); /* Improves text readability */
+}
+
+
+    </style>
+
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header class="header" id="home">
+      <div class="container">
+        <nav class="header-navigation" aria-label="navigation">
+          <div class="logo"><span class="yellow">M</span>Fitness</div>
+
+          <img
+            src="https://raw.githubusercontent.com/Manoranjan-D/responsive-website-gym/master/img/nav-icon.svg"
+            alt="navigation icon"
+            class="nav-icon"
+            width="30"
+            height="30"
+          />
+
+          <ul>
+            <li>
+              <a href="#">Home</a>
+            </li>
+            <li>
+              <a href="#about">About</a>
+            </li>
+            <li>
+              <a href="#courses">Courses</a>
+            </li>
+            <li>
+              <a href="#trainers">Trainers</a>
+            </li>
+            <li>
+              <a href="#contact">Contact</a>
+            </li>
+            <li>
+              <a href="#Register">Register</a>
+            </li>
+            <li>
+              <a href="#Login">Login</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+
+    <!-- MEMBER LOGIN -->
+    <main class="section">
+        <div class="logincontainer">
+            
+            <form id="loginForm">
+                <h2 class="heading heading--2">Login</h2>
+                <br>
+                <input type="email" name="email" placeholder="Email" class="form form__input" required>
+                <input type="password" name="password" placeholder="Password" class="form form__input" required>
+                <button type="submit" class="btn btn__primary">Login</button>
+            </form>
+        </div>
+    </main>
+
+
+
+
+
+    <!-- FOOTER -->
+    <footer class="section-footer" id="footer">
+        <div class="footer-box container">
+          <div class="contact-details">
+            <h2 class="margin-bottom"><span class="yellow">M</span>Fitness</h2>
+  
+            <ul class="contact-data">
+              <li class="location">100 Nallin Street, New Youk</li>
+              <li class="phone">+00 000 000 00</li>
+              <li class="email">MFitness@domine.com</li>
+              <li class="social">
+                <img
+                  src="https://raw.githubusercontent.com/Manoranjan-D/responsive-website-gym/master/img/logo-whatsapp.svg"
+                  alt="whatsapp icon"
+                  width="35"
+                  height="35"
+                />
+  
+                <img
+                  src="https://raw.githubusercontent.com/Manoranjan-D/responsive-website-gym/master/img/logo-facebook.svg"
+                  alt="facebook icon"
+                  width="35"
+                  height="35"
+                />
+  
+                <img
+                  src="https://raw.githubusercontent.com/Manoranjan-D/responsive-website-gym/master/img/logo-instagram.svg"
+                  alt="instagram icon"
+                  width="35"
+                  height="35"
+                />
+  
+                <img
+                  src="https://raw.githubusercontent.com/Manoranjan-D/responsive-website-gym/master/img/logo-twitter.svg"
+                  alt="twitter icon"
+                  width="35"
+                  height="35"
+                />
+              </li>
+            </ul>
+          </div>
+  
+          <nav class="footer-nav" aria-label="navigation">
+            <div class="nav-name">Quick Links</div>
+            <ul>
+              <li><a href="#home">Home</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#courses">Courses</a></li>
+              <li><a href="#trainers">Trainers</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </nav>
+  
+          <div class="newsletter">
+            <div class="newsletter__title">News Letter</div>
+            <div class="newsletter__text">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium,
+              nisi!
+            </div>
+            <form class="newsletter__input">
+              <input type="text" class="form" placeholder="example@domine.com" />
+              <img
+                src="https://raw.githubusercontent.com/Manoranjan-D/responsive-website-gym/master/img/send.svg"
+                alt="send icon"
+                class="send-icon"
+                width="36"
+                height="36"
+              />
+            </form>
+          </div>
+  
+          <div class="legel">
+            <p class="text">Copyright © by Manoranjan </p>
+            <a href="https://github.com/Manoranjan-D/responsive-website-gym">
+              <img
+                src="https://raw.githubusercontent.com/Manoranjan-D/responsive-website-gym/master/img/github.svg"
+                alt="github"
+                class="github"
+                width="35"
+                height="35"
+              />
+            </a>
+          </div>
+        </div>
+      </footer>
+    </body>
+</html>    
