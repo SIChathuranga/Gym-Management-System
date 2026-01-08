@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Login to your MFitness account to access your profile, bookings, and exclusive member benefits." />
+  <title>Login | MFitness</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="index.css" />
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+
+<body>
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="loader-spinner"></div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="header" id="home">
+    <div class="container">
+      <nav class="header-navigation" aria-label="navigation">
+        <a href="index.html" class="logo"><span>M</span>Fitness</a>
+
+        <img src="https://raw.githubusercontent.com/Manoranjan-D/responsive-website-gym/master/img/nav-icon.svg"
+          alt="navigation icon" class="nav-icon" width="30" height="30" />
+
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="index.html#courses">Courses</a></li>
+          <li><a href="index.html#trainers">Trainers</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+          <li class="nav-auth">
+            <a href="registration.html" class="btn btn__secondary btn__sm">Register</a>
+            <a href="login.html" class="btn btn__primary btn__sm">Login</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- LOGIN SECTION -->
+  <main class="auth-page">
+    <div class="auth-card" data-animate="fadeInScale">
+      <div class="auth-card__header">
+        <div class="logo"><span>M</span>Fitness</div>
+        <p>Welcome back! Please login to your account.</p>
+      </div>
+
+      <form id="loginForm" class="auth-card__form">
+        <input type="email" name="email" class="form form__input" placeholder="Email Address" required
+          autocomplete="email" />
+        <input type="password" name="password" class="form form__input" placeholder="Password" required
+          autocomplete="current-password" minlength="6" />
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <label
+            style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 1.4rem; color: var(--color-text-muted);">
+            <input type="checkbox" name="remember" style="width: 16px; height: 16px;">
+            Remember me
+          </label>
+          <a href="#" id="forgotPassword"
+            style="font-size: 1.4rem; color: var(--color-primary); text-decoration: none;">Forgot Password?</a>
+        </div>
+
+        <button type="submit" class="btn btn__primary btn__lg" style="width: 100%;">Login</button>
+      </form>
+
+      <div class="auth-card__footer">
+        <p style="color: var(--color-text-muted);">
+          Don't have an account? <a href="registration.html">Create Account</a>
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="section-footer" id="footer" style="padding: 2rem 0;">
+    <div class="container" style="text-align: center;">
+      <p style="color: var(--color-text-subtle); font-size: 1.4rem;">
+        © 2026 MFitness. All rights reserved.
+      </p>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script src="js/firebase-config.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // Animate the card on load
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        document.querySelector('.auth-card').classList.add('fadeInScale');
+      }, 100);
+    });
+  </script>
+</body>
+
+</html>

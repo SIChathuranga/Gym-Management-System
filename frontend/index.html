@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="MFitness - Transform your body, transform your life. Join our premium fitness center with world-class trainers, modern equipment, and personalized workout programs." />
+  <title>MFitness | Premium Gym & Fitness Center</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="index.css" />
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+
+<body>
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="loader-spinner"></div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="header" id="home">
+    <div class="container">
+      <nav class="header-navigation" aria-label="navigation">
+        <a href="index.html" class="logo"><span>M</span>Fitness</a>
+
+        <img src="https://raw.githubusercontent.com/Manoranjan-D/responsive-website-gym/master/img/nav-icon.svg"
+          alt="navigation icon" class="nav-icon" width="30" height="30" />
+
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#courses">Courses</a></li>
+          <li><a href="#trainers">Trainers</a></li>
+          <li><a href="#testimonials">Reviews</a></li>
+          <li><a href="#contact">Contact</a></li>
+
+          <!-- Auth Buttons (shown when logged out) -->
+          <li id="authButtons" class="nav-auth">
+            <a href="registration.html" class="btn btn__secondary btn__sm">Register</a>
+            <a href="login.html" class="btn btn__primary btn__sm">Login</a>
+          </li>
+
+          <!-- User Menu (shown when logged in) -->
+          <li id="userMenu" style="display: none;">
+            <div class="user-avatar" id="userAvatar">U</div>
+            <span id="userName">User</span>
+            <a href="profile.html" class="btn btn__outline btn__sm">Profile</a>
+            <a href="booking.html" class="btn btn__primary btn__sm">Book Now</a>
+            <button id="logoutBtn" class="btn btn__outline btn__sm">Logout</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="section-hero" id="hero" data-animate="fadeInScale">
+      <div class="container hero-box">
+        <div class="hero-content margin-bottom">
+          <h1 class="heading heading--1 margin-bottom">
+            A place for your <span class="text-gradient">fitness</span> goals
+          </h1>
+          <p class="description">
+            We Offer Functional Training, Plyometric Boxes, Aerobics classes,
+            TRX And Much More. Transform your body, transform your life.
+          </p>
+          <div class="btn-group" style="margin-top: var(--space-xl);">
+            <a href="registration.html" class="btn btn__primary btn__lg">Join Us</a>
+            <a href="#courses" class="btn btn__secondary">Our Services</a>
+          </div>
+        </div>
+
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat__number">5000+</div>
+            <div class="hero-stat__label">Happy Members</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat__number">50+</div>
+            <div class="hero-stat__label">Expert Trainers</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat__number">10+</div>
+            <div class="hero-stat__label">Years Experience</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NOTICES SECTION -->
+    <section class="container" style="padding: var(--space-xl) 0; background: transparent;">
+      <div id="noticesContainer" style="display: none;"></div>
+    </section>
+
+    <!-- SECTION ABOUT -->
+    <section class="section-about" id="about" data-animate="fadeInLeft">
+      <div class="about-box container">
+        <div class="about-box__content">
+          <h2 class="heading heading--2">
+            About <span class="text-gradient">MFitness</span>
+          </h2>
+          <p>
+            At MFitness, we believe that fitness is not just about physical
+            transformation—it's about building a healthier, happier lifestyle.
+            Our state-of-the-art facility offers everything you need to achieve
+            your fitness goals, from advanced cardio equipment to dedicated
+            strength training zones.
+          </p>
+          <p>
+            Whether you're a beginner taking your first steps into fitness or
+            an experienced athlete looking to push your limits, our certified
+            trainers are here to guide you every step of the way.
+          </p>
+          <a href="#contact" class="link-button">Get in Touch →</a>
+        </div>
+        <figure class="about-box__image">
+          <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400"
+            alt="Gym interior with modern equipment" loading="lazy" />
+          <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400" alt="Personal training session"
+            loading="lazy" />
+          <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=500" alt="Fitness class in session"
+            loading="lazy" />
+        </figure>
+      </div>
+    </section>
+
+    <!-- SECTION COURSES -->
+    <section class="section-courses" id="courses" data-animate="fadeInUp">
+      <div class="container">
+        <header class="courses-heading">
+          <h2 class="heading heading--2 underline">Our Courses</h2>
+          <p>
+            Discover a wide range of fitness programs designed to challenge,
+            inspire, and transform you. From high-intensity workouts to
+            mindful yoga sessions, we have something for everyone.
+          </p>
+        </header>
+
+        <article class="courses-content">
+          <div class="class-card">
+            <img class="class-card__img" src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=600"
+              alt="body building course" loading="lazy" />
+            <div class="class-card__overlay">
+              <div class="text">
+                <p>Build muscle mass and strength with our comprehensive bodybuilding program.</p>
+                <a href="booking.html" class="link-button">Book Now →</a>
+              </div>
+            </div>
+            <div class="class-card__title">Body Building</div>
+          </div>
+
+          <div class="class-card">
+            <img class="class-card__img" src="https://images.unsplash.com/photo-1534367507873-d2d7e24c797f?w=600"
+              alt="cross fit course" loading="lazy" />
+            <div class="class-card__overlay">
+              <div class="text">
+                <p>High-intensity functional movements for overall fitness and conditioning.</p>
+                <a href="booking.html" class="link-button">Book Now →</a>
+              </div>
+            </div>
+            <div class="class-card__title">Cross Fit</div>
+          </div>
+
+          <div class="class-card">
+            <img class="class-card__img" src="https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?w=600"
+              alt="yoga course" loading="lazy" />
+            <div class="class-card__overlay">
+              <div class="text">
+                <p>Find inner peace and flexibility with our expert-led yoga sessions.</p>
+                <a href="booking.html" class="link-button">Book Now →</a>
+              </div>
+            </div>
+            <div class="class-card__title">Yoga</div>
+          </div>
+
+          <div class="class-card">
+            <img class="class-card__img" src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600"
+              alt="fitness course" loading="lazy" />
+            <div class="class-card__overlay">
+              <div class="text">
+                <p>General fitness programs to improve your overall health and wellbeing.</p>
+                <a href="booking.html" class="link-button">Book Now →</a>
+              </div>
+            </div>
+            <div class="class-card__title">Fitness</div>
+          </div>
+
+          <div class="class-card">
+            <img class="class-card__img" src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600"
+              alt="cardio course" loading="lazy" />
+            <div class="class-card__overlay">
+              <div class="text">
+                <p>Boost your cardiovascular health with our energizing cardio sessions.</p>
+                <a href="booking.html" class="link-button">Book Now →</a>
+              </div>
+            </div>
+            <div class="class-card__title">Cardio</div>
+          </div>
+
+          <div class="class-card">
+            <img class="class-card__img" src="https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=600"
+              alt="boxing course" loading="lazy" />
+            <div class="class-card__overlay">
+              <div class="text">
+                <p>Learn boxing techniques while getting an intense full-body workout.</p>
+                <a href="booking.html" class="link-button">Book Now →</a>
+              </div>
+            </div>
+            <div class="class-card__title">Boxing</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- SECTION OFFER -->
+    <section class="section-offer" id="offer" data-animate="zoomIn">
+      <div class="offer-box container">
+        <div class="offer">
+          <h2 class="heading heading--2">
+            Special New Year Offer! Get Full Benefits for a Year with
+            <span class="text-gradient">30% Discount</span>
+          </h2>
+          <p>
+            Start your fitness journey with our exclusive new year offer.
+            Get unlimited access to all classes, trainers, and facilities
+            at an unbeatable price. Limited time offer—don't miss out!
+          </p>
+          <a href="registration.html" class="btn btn__primary btn__lg">Become a Member</a>
+        </div>
+        <div class="offer-img"></div>
+      </div>
+    </section>
+
+    <!-- SECTION COACHES -->
+    <section class="section-coaches" id="trainers" data-animate="fadeInUp">
+      <div class="container">
+        <header class="coache-heading">
+          <h2 class="heading heading--2 underline">Our Fitness Coaches</h2>
+          <p>
+            Meet our team of certified professionals dedicated to helping
+            you achieve your fitness goals with personalized guidance and support.
+          </p>
+        </header>
+
+        <article class="coache-content">
+          <div class="c-card">
+            <img src="https://images.unsplash.com/photo-1567013127542-490d757e51fc?w=500" alt="Coach Mark"
+              class="c-card__img" loading="lazy" />
+            <div class="overlay">
+              <img
+                src="https://raw.githubusercontent.com/Manoranjan-D/responsive-website-gym/master/img/logo-whatsapp.svg"
+                alt="whatsapp" />
+              <img
+                src="https://raw.githubusercontent.com/Manoranjan-D/responsive-website-gym/master/img/logo-facebook.svg"
+                alt="facebook" />
+              <img
+                src="https://raw.githubusercontent.com/Manoranjan-D/responsive-website-gym/master/img/logo-instagram.svg"
+                alt="instagram" />
+            </div>
+            <div class="c-card__content">
+              <p class="c-name">Mark Johnson</p>
+              <p class="c-title">Body Building Expert</p>
+            </div>
+          </div>
+
+          <div class="c-card">
+            <img src="https://images.unsplash.com/photo-1571731956672-f2b94d7dd0cb?w=500" alt="Coach Sarah"
+              class="c-card__img" loading="lazy" />
+            <div class="overlay">
+              <img
+                src="https://raw.githubusercontent.com/Manoranjan-D/responsive-website-gym/master/img/logo-whatsapp.svg"
+                alt="whatsapp" />
+              <img
+                src="https://raw.githubusercontent.com/Manoranjan-D/responsive-website-gym/master/img/logo-facebook.svg"
+                alt="facebook" />
+              <img
+                src="https://raw.githubusercontent.com/Manoranjan-D/responsive-website-gym/master/img/logo-instagram.svg"
+                alt="instagram" />
+            </div>
+            <div class="c-card__content">
+              <p class="c-name">Sarah Williams</p>
+              <p class="c-title">Yoga & Wellness</p>
+            </div>
+          </div>
+
+          <div class="c-card">
+            <img src="https://images.unsplash.com/photo-1594381898411-846e7d193883?w=500" alt="Coach Mike"
+              class="c-card__img" loading="lazy" />
+            <div class="overlay">
+              <img
+                src="https://raw.githubusercontent.com/Manoranjan-D/responsive-website-gym/master/img/logo-whatsapp.svg"
+                alt="whatsapp" />
+              <img
+                src="https://raw.githubusercontent.com/Manoranjan-D/responsive-website-gym/master/img/logo-facebook.svg"
+                alt="facebook" />
+              <img
+                src="https://raw.githubusercontent.com/Manoranjan-D/responsive-website-gym/master/img/logo-instagram.svg"
+                alt="instagram" />
+            </div>
+            <div class="c-card__content">
+              <p class="c-name">Mike Chen</p>
+              <p class="c-title">CrossFit Coach</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- SECTION TESTIMONIALS -->
+    <section class="section-review" id="testimonials" data-animate="fadeInLeft">
+      <div class="review-box container">
+        <h2 class="heading heading--2 underline margin-bottom">What Our Members Say</h2>
+
+        <!-- Dynamic Comments Container -->
+        <div id="commentsContainer">
+          <!-- Comments will be loaded dynamically -->
+        </div>
+
+        <!-- Add Comment Form (visible only when logged in) -->
+        <form id="commentForm">
+          <h3>Share Your Experience</h3>
+          <div class="rating">
+            <input type="radio" name="rating" id="star5" value="5">
+            <label for="star5">★</label>
+            <input type="radio" name="rating" id="star4" value="4">
+            <label for="star4">★</label>
+            <input type="radio" name="rating" id="star3" value="3" checked>
+            <label for="star3">★</label>
+            <input type="radio" name="rating" id="star2" value="2">
+            <label for="star2">★</label>
+            <input type="radio" name="rating" id="star1" value="1">
+            <label for="star1">★</label>
+          </div>
+          <textarea id="commentText" class="form form__input" placeholder="Share your experience with MFitness..."
+            rows="4" required></textarea>
+          <input type="hidden" id="commentRating" value="5">
+          <button type="submit" class="btn btn__primary">Submit Review</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- SECTION OPERATING HOURS -->
+    <section class="section-hours" id="hours" data-animate="fadeInRight" style="background: var(--color-bg-darker);">
+      <div class="container" style="max-width: 600px;">
+        <h2 class="heading heading--2 underline margin-bottom text-center">Operating Hours</h2>
+        <div id="hoursContainer">
+          <!-- Hours will be loaded dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION CONTACT -->
+    <section class="section-contact" id="contact" data-animate="slideIn">
+      <div class="contact-box container">
+        <form class="form-grp" id="contactForm">
+          <h2 class="heading heading--2">
+            Get in <span class="text-gradient">Touch</span>
+          </h2>
+          <p class="text-muted">Have questions? We'd love to hear from you. Send us a message and we'll respond as soon
+            as possible.</p>
+
+          <input type="text" name="name" class="form form__input" placeholder="Your Name" required />
+          <input type="email" name="email" class="form form__input" placeholder="Your Email" required />
+          <input type="tel" name="phone" class="form form__input" placeholder="Your Phone (optional)" />
+          <textarea name="message" cols="5" rows="4" class="form form__input" placeholder="Your Message"
+            required></textarea>
+          <button type="submit" class="btn btn__primary">Send Message</button>
+        </form>
+
+        <div id="mapid">
+          <div style="text-align: center; color: var(--color-text-muted);">
+            <p style="font-size: 4rem; margin-bottom: 1rem;">📍</p>
+            <h3>Visit Us</h3>
+            <p>123 Fitness Street<br>New York, NY 10001</p>
+            <p style="margin-top: 1rem;">
+              <strong>Phone:</strong> +1 (555) 123-4567<br>
+              <strong>Email:</strong> info@mfitness.com
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="section-footer" id="footer">
+    <div class="footer-box container">
+      <div class="contact-details">
+        <h2 class="margin-bottom"><span class="text-gradient">M</span>Fitness</h2>
+        <p class="text-muted" style="margin-bottom: 1.5rem;">
+          Transform your body, transform your life. Join the MFitness family today.
+        </p>
+        <ul class="contact-data">
+          <li>📍 123 Fitness Street, New York, NY</li>
+          <li>📞 +1 (555) 123-4567</li>
+          <li>✉️ info@mfitness.com</li>
+          <li class="social">
+            <img
+              src="https://raw.githubusercontent.com/Manoranjan-D/responsive-website-gym/master/img/logo-whatsapp.svg"
+              alt="whatsapp icon" />
+            <img
+              src="https://raw.githubusercontent.com/Manoranjan-D/responsive-website-gym/master/img/logo-facebook.svg"
+              alt="facebook icon" />
+            <img
+              src="https://raw.githubusercontent.com/Manoranjan-D/responsive-website-gym/master/img/logo-instagram.svg"
+              alt="instagram icon" />
+            <img src="https://raw.githubusercontent.com/Manoranjan-D/responsive-website-gym/master/img/logo-twitter.svg"
+              alt="twitter icon" />
+          </li>
+        </ul>
+      </div>
+
+      <nav class="footer-nav" aria-label="navigation">
+        <div class="nav-name">Quick Links</div>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#courses">Courses</a></li>
+          <li><a href="#trainers">Trainers</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="booking.html">Book Session</a></li>
+        </ul>
+      </nav>
+
+      <div class="newsletter">
+        <div class="newsletter__title">Newsletter</div>
+        <div class="newsletter__text">
+          Subscribe to our newsletter for fitness tips, special offers, and updates.
+        </div>
+        <form class="newsletter__input">
+          <input type="email" class="form" placeholder="Enter your email" />
+          <img src="https://raw.githubusercontent.com/Manoranjan-D/responsive-website-gym/master/img/send.svg"
+            alt="send icon" class="send-icon" />
+        </form>
+      </div>
+
+      <div class="legel">
+        <p class="text">© 2026 MFitness. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script src="js/firebase-config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/main.js"></script>
+
+  <script>
+    // Update rating hidden input when stars are clicked
+    document.querySelectorAll('.rating input').forEach(input => {
+      input.addEventListener('change', (e) => {
+        document.getElementById('commentRating').value = e.target.value;
+      });
+    });
+
+    // Update user avatar initial
+    if (typeof auth !== 'undefined') {
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          const avatar = document.getElementById('userAvatar');
+          if (avatar && user.displayName) {
+            avatar.textContent = user.displayName.charAt(0).toUpperCase();
+          }
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>

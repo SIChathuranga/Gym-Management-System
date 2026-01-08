@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Book your gym sessions, personal training, yoga classes, and more at MFitness." />
+    <title>Book Session | MFitness</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="index.css" />
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+
+<body>
+    <!-- LOADER -->
+    <div id="loader">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="header" id="home">
+        <div class="container">
+            <nav class="header-navigation" aria-label="navigation">
+                <a href="index.html" class="logo"><span>M</span>Fitness</a>
+
+                <img src="https://raw.githubusercontent.com/Manoranjan-D/responsive-website-gym/master/img/nav-icon.svg"
+                    alt="navigation icon" class="nav-icon" width="30" height="30" />
+
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="index.html#courses">Courses</a></li>
+                    <li><a href="index.html#trainers">Trainers</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+
+                    <!-- User Menu -->
+                    <li id="userMenu" style="display: none;">
+                        <a href="profile.html" class="btn btn__outline btn__sm">Profile</a>
+                        <button id="logoutBtn" class="btn btn__secondary btn__sm">Logout</button>
+                    </li>
+
+                    <!-- Auth Buttons (shown when logged out) -->
+                    <li id="authButtons" class="nav-auth">
+                        <a href="registration.html" class="btn btn__secondary btn__sm">Register</a>
+                        <a href="login.html" class="btn btn__primary btn__sm">Login</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- BOOKING SECTION -->
+    <main>
+        <section class="section-booking" style="padding-top: calc(var(--header-height) + var(--space-2xl));">
+            <div class="container">
+                <header style="text-align: center; margin-bottom: var(--space-2xl);">
+                    <h1 class="heading heading--1 margin-bottom">Book Your <span class="text-gradient">Session</span>
+                    </h1>
+                    <p class="text-muted" style="max-width: 600px; margin: 0 auto;">
+                        Reserve your spot for gym access, personal training, yoga classes, and more.
+                        Choose your preferred date, time, and session type below.
+                    </p>
+                </header>
+
+                <div class="booking-grid">
+                    <!-- Booking Form -->
+                    <div class="booking-form-container" data-animate="fadeInLeft">
+                        <h2 class="heading heading--3 margin-bottom">New Booking</h2>
+
+                        <form id="bookingForm">
+                            <div style="display: flex; flex-direction: column; gap: var(--space-md);">
+                                <div>
+                                    <label for="bookingDate"
+                                        style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--color-text-muted);">
+                                        Select Date
+                                    </label>
+                                    <input type="date" id="bookingDate" class="form form__input" required />
+                                </div>
+
+                                <div>
+                                    <label for="timeSlot"
+                                        style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--color-text-muted);">
+                                        Select Time Slot
+                                    </label>
+                                    <select id="timeSlot" class="form form__input" required>
+                                        <option value="" disabled selected>Choose a time slot</option>
+                                        <!-- Options populated by JavaScript -->
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label for="sessionType"
+                                        style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--color-text-muted);">
+                                        Session Type
+                                    </label>
+                                    <select id="sessionType" class="form form__input" required>
+                                        <option value="" disabled selected>Choose session type</option>
+                                        <!-- Options populated by JavaScript -->
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label for="bookingNotes"
+                                        style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--color-text-muted);">
+                                        Additional Notes (Optional)
+                                    </label>
+                                    <textarea id="bookingNotes" class="form form__input"
+                                        placeholder="Any special requests or notes..." rows="3"></textarea>
+                                </div>
+
+                                <button type="submit" class="btn btn__primary btn__lg">Confirm Booking</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- My Bookings -->
+                    <div data-animate="fadeInRight">
+                        <h2 class="heading heading--3 margin-bottom">Your Bookings</h2>
+                        <div id="bookingsContainer">
+                            <!-- Bookings will be loaded dynamically -->
+                            <div class="empty-state">
+                                <div class="empty-state__icon">📅</div>
+                                <h3>Loading...</h3>
+                                <p>Please wait while we load your bookings.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Session Types Info -->
+                <section style="margin-top: var(--space-3xl);" data-animate="fadeInUp">
+                    <h2 class="heading heading--2 underline text-center margin-bottom"
+                        style="margin-bottom: var(--space-2xl);">Available Sessions</h2>
+
+                    <div
+                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-lg);">
+                        <div class="admin-card">
+                            <h3 style="color: var(--color-primary); margin-bottom: 0.5rem;">🏋️ Gym Access</h3>
+                            <p class="text-muted" style="font-size: 1.4rem; margin-bottom: 1rem;">Full access to all gym
+                                equipment and facilities</p>
+                            <p style="font-weight: 600;">Duration: 2 hours</p>
+                            <p class="text-gradient" style="font-size: 1.8rem; font-weight: 700;">Included in Membership
+                            </p>
+                        </div>
+
+                        <div class="admin-card">
+                            <h3 style="color: var(--color-primary); margin-bottom: 0.5rem;">👤 Personal Training</h3>
+                            <p class="text-muted" style="font-size: 1.4rem; margin-bottom: 1rem;">One-on-one session
+                                with certified trainer</p>
+                            <p style="font-weight: 600;">Duration: 1 hour</p>
+                            <p class="text-gradient" style="font-size: 1.8rem; font-weight: 700;">$50 / session</p>
+                        </div>
+
+                        <div class="admin-card">
+                            <h3 style="color: var(--color-primary); margin-bottom: 0.5rem;">🧘 Yoga Class</h3>
+                            <p class="text-muted" style="font-size: 1.4rem; margin-bottom: 1rem;">Group yoga sessions
+                                for mind and body</p>
+                            <p style="font-weight: 600;">Duration: 1 hour</p>
+                            <p class="text-gradient" style="font-size: 1.8rem; font-weight: 700;">$25 / class</p>
+                        </div>
+
+                        <div class="admin-card">
+                            <h3 style="color: var(--color-primary); margin-bottom: 0.5rem;">❤️ Cardio Session</h3>
+                            <p class="text-muted" style="font-size: 1.4rem; margin-bottom: 1rem;">High-energy cardio
+                                workout sessions</p>
+                            <p style="font-weight: 600;">Duration: 45 minutes</p>
+                            <p class="text-gradient" style="font-size: 1.8rem; font-weight: 700;">$15 / session</p>
+                        </div>
+
+                        <div class="admin-card">
+                            <h3 style="color: var(--color-primary); margin-bottom: 0.5rem;">💪 CrossFit Class</h3>
+                            <p class="text-muted" style="font-size: 1.4rem; margin-bottom: 1rem;">Intense functional
+                                fitness workouts</p>
+                            <p style="font-weight: 600;">Duration: 1 hour</p>
+                            <p class="text-gradient" style="font-size: 1.8rem; font-weight: 700;">$30 / class</p>
+                        </div>
+
+                        <div class="admin-card">
+                            <h3 style="color: var(--color-primary); margin-bottom: 0.5rem;">🥊 Boxing Training</h3>
+                            <p class="text-muted" style="font-size: 1.4rem; margin-bottom: 1rem;">Learn boxing
+                                techniques and get fit</p>
+                            <p style="font-weight: 600;">Duration: 1 hour</p>
+                            <p class="text-gradient" style="font-size: 1.8rem; font-weight: 700;">$35 / session</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="section-footer" id="footer">
+        <div class="footer-box container">
+            <div class="contact-details">
+                <h2 class="margin-bottom"><span class="text-gradient">M</span>Fitness</h2>
+                <p class="text-muted" style="margin-bottom: 1.5rem;">
+                    Transform your body, transform your life.
+                </p>
+                <ul class="contact-data">
+                    <li>📍 123 Fitness Street, New York, NY</li>
+                    <li>📞 +1 (555) 123-4567</li>
+                    <li>✉️ info@mfitness.com</li>
+                </ul>
+            </div>
+
+            <nav class="footer-nav" aria-label="navigation">
+                <div class="nav-name">Quick Links</div>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="index.html#courses">Courses</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+
+            <div class="newsletter">
+                <div class="newsletter__title">Need Help?</div>
+                <div class="newsletter__text">
+                    Contact us if you have any questions about bookings or memberships.
+                </div>
+                <a href="index.html#contact" class="btn btn__primary" style="width: 100%;">Contact Us</a>
+            </div>
+
+            <div class="legel">
+                <p class="text">© 2026 MFitness. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/booking.js"></script>
+    <script src="js/main.js"></script>
+
+    <script>
+        // Check authentication on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof auth !== 'undefined') {
+                auth.onAuthStateChanged((user) => {
+                    if (!user) {
+                        // Redirect to login if not authenticated
+                        showNotification('Please login to book a session', 'info');
+                        setTimeout(() => {
+                            window.location.href = 'login.html';
+                        }, 2000);
+                    }
+                });
+            }
+
+            // Animate elements
+            setTimeout(() => {
+                document.querySelectorAll('[data-animate]').forEach(el => {
+                    el.classList.add(el.dataset.animate);
+                });
+            }, 100);
+        });
+    </script>
+</body>
+
+</html>

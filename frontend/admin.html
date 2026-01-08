@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description"
+        content="MFitness Admin Dashboard - Manage members, bookings, notices, and gym settings." />
+    <title>Admin Dashboard | MFitness</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="index.css" />
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+
+<body>
+    <!-- LOADER -->
+    <div id="loader">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="header" id="home">
+        <div class="container">
+            <nav class="header-navigation" aria-label="navigation">
+                <a href="index.html" class="logo"><span>M</span>Fitness <span
+                        style="font-size: 1.4rem; color: var(--color-primary); margin-left: 0.5rem;">Admin</span></a>
+
+                <ul>
+                    <li><a href="index.html">View Site</a></li>
+                    <li id="userMenu" style="display: flex; align-items: center; gap: 1rem;">
+                        <span id="userName" style="color: var(--color-text-muted);">Admin</span>
+                        <button id="logoutBtn" class="btn btn__outline btn__sm">Logout</button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ADMIN DASHBOARD -->
+    <main>
+        <section class="section-admin"
+            style="padding-top: calc(var(--header-height) + var(--space-2xl)); min-height: 100vh; background: var(--color-bg-darker);">
+            <div class="container">
+                <header style="margin-bottom: var(--space-2xl);">
+                    <h1 class="heading heading--1">Admin <span class="text-gradient">Dashboard</span></h1>
+                    <p class="text-muted">Manage your gym, members, and content from here.</p>
+                </header>
+
+                <!-- Quick Stats -->
+                <div class="admin-grid" style="margin-bottom: var(--space-2xl);">
+                    <div class="admin-card" data-animate="fadeInUp">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <p class="text-muted" style="margin-bottom: 0.5rem;">Total Members</p>
+                                <h2 id="totalMembers" style="font-size: 3rem; color: var(--color-primary);">0</h2>
+                            </div>
+                            <span style="font-size: 4rem;">👥</span>
+                        </div>
+                    </div>
+
+                    <div class="admin-card" data-animate="fadeInUp">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <p class="text-muted" style="margin-bottom: 0.5rem;">Today's Bookings</p>
+                                <h2 id="todayBookings" style="font-size: 3rem; color: var(--color-accent);">0</h2>
+                            </div>
+                            <span style="font-size: 4rem;">📅</span>
+                        </div>
+                    </div>
+
+                    <div class="admin-card" data-animate="fadeInUp">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <p class="text-muted" style="margin-bottom: 0.5rem;">Pending Reviews</p>
+                                <h2 id="pendingReviews" style="font-size: 3rem; color: var(--color-info);">0</h2>
+                            </div>
+                            <span style="font-size: 4rem;">⭐</span>
+                        </div>
+                    </div>
+
+                    <div class="admin-card" data-animate="fadeInUp">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <p class="text-muted" style="margin-bottom: 0.5rem;">Unread Messages</p>
+                                <h2 id="unreadMessages" style="font-size: 3rem; color: var(--color-error);">0</h2>
+                            </div>
+                            <span style="font-size: 4rem;">💬</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Grid -->
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-xl);">
+
+                    <!-- Left Column -->
+                    <div>
+                        <!-- Manage Notices -->
+                        <div class="admin-card" style="margin-bottom: var(--space-xl);" data-animate="fadeInLeft">
+                            <div class="admin-card__header">
+                                <h3 class="admin-card__title">📢 Manage Notices</h3>
+                            </div>
+
+                            <form id="noticeForm"
+                                style="display: flex; flex-direction: column; gap: var(--space-md); margin-bottom: var(--space-lg);">
+                                <input type="text" id="noticeTitle" class="form form__input" placeholder="Notice Title"
+                                    required />
+                                <textarea id="noticeMessage" class="form form__input" placeholder="Notice Message"
+                                    rows="3" required></textarea>
+                                <div style="display: flex; gap: var(--space-md);">
+                                    <select id="noticeType" class="form form__input">
+                                        <option value="info">Info</option>
+                                        <option value="important">Important</option>
+                                        <option value="event">Event</option>
+                                    </select>
+                                    <button type="submit" class="btn btn__primary">Post Notice</button>
+                                </div>
+                            </form>
+
+                            <h4 style="margin-bottom: 1rem; color: var(--color-text-muted);">Active Notices</h4>
+                            <div id="adminNotices">
+                                <p class="text-muted">Loading notices...</p>
+                            </div>
+                        </div>
+
+                        <!-- Pending Reviews -->
+                        <div class="admin-card" data-animate="fadeInLeft">
+                            <div class="admin-card__header">
+                                <h3 class="admin-card__title">⭐ Pending Reviews</h3>
+                            </div>
+                            <div id="pendingReviewsList">
+                                <p class="text-muted">Loading reviews...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div>
+                        <!-- Operating Hours -->
+                        <div class="admin-card" style="margin-bottom: var(--space-xl);" data-animate="fadeInRight">
+                            <div class="admin-card__header">
+                                <h3 class="admin-card__title">🕐 Operating Hours</h3>
+                            </div>
+
+                            <form id="hoursForm" style="display: flex; flex-direction: column; gap: var(--space-sm);">
+                                <!-- Days will be populated by JavaScript -->
+                                <div id="hoursInputs"></div>
+                                <button type="submit" class="btn btn__primary" style="margin-top: 1rem;">Update
+                                    Hours</button>
+                            </form>
+                        </div>
+
+                        <!-- Recent Contact Messages -->
+                        <div class="admin-card" data-animate="fadeInRight">
+                            <div class="admin-card__header">
+                                <h3 class="admin-card__title">💬 Recent Messages</h3>
+                            </div>
+                            <div id="recentMessages">
+                                <p class="text-muted">Loading messages...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="section-footer" id="footer" style="padding: 2rem 0;">
+        <div class="container" style="text-align: center;">
+            <p style="color: var(--color-text-subtle); font-size: 1.4rem;">
+                © 2026 MFitness Admin Panel. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+
+    <script>
+        const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+        // Check admin access
+        async function checkAdminAccess(user) {
+            try {
+                const doc = await db.collection('users').doc(user.uid).get();
+                if (!doc.exists || !doc.data().isAdmin) {
+                    showNotification('Admin access required', 'error');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                    return false;
+                }
+                document.getElementById('userName').textContent = doc.data().name || 'Admin';
+                return true;
+            } catch (error) {
+                console.error('Error checking admin access:', error);
+                return false;
+            }
+        }
+
+        // Load dashboard stats
+        async function loadDashboardStats() {
+            try {
+                // Total members
+                const members = await db.collection('users').get();
+                document.getElementById('totalMembers').textContent = members.size;
+
+                // Today's bookings
+                const today = new Date().toISOString().split('T')[0];
+                const bookings = await db.collection('bookings')
+                    .where('date', '==', today)
+                    .where('status', '==', 'confirmed')
+                    .get();
+                document.getElementById('todayBookings').textContent = bookings.size;
+
+                // Pending reviews
+                const reviews = await db.collection('comments')
+                    .where('approved', '==', false)
+                    .get();
+                document.getElementById('pendingReviews').textContent = reviews.size;
+
+                // Unread messages
+                const messages = await db.collection('contacts')
+                    .where('status', '==', 'unread')
+                    .get();
+                document.getElementById('unreadMessages').textContent = messages.size;
+
+                // Load pending reviews list
+                displayPendingReviews(reviews);
+
+                // Load recent messages
+                loadRecentMessages();
+
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // Display pending reviews
+        function displayPendingReviews(snapshot) {
+            const container = document.getElementById('pendingReviewsList');
+
+            if (snapshot.empty) {
+                container.innerHTML = '<p class="text-muted text-center">No pending reviews</p>';
+                return;
+            }
+
+            let html = '';
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                html += `
+            <div style="padding: 1rem; background: var(--color-bg-card); border-radius: var(--radius-md); margin-bottom: 1rem;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <strong>${data.userName || 'Anonymous'}</strong>
+                <span style="color: var(--color-accent);">${'★'.repeat(data.rating)}</span>
+              </div>
+              <p style="font-size: 1.4rem; color: var(--color-text-muted); margin-bottom: 1rem;">"${data.text}"</p>
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="btn btn__primary btn__sm" onclick="approveReview('${doc.id}')">Approve</button>
+                <button class="btn btn__outline btn__sm" onclick="deleteReview('${doc.id}')">Delete</button>
+              </div>
+            </div>
+          `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Approve review
+        async function approveReview(reviewId) {
+            try {
+                const user = auth.currentUser;
+                await db.collection('comments').doc(reviewId).update({
+                    approved: true,
+                    approvedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    approvedBy: user.uid
+                });
+                showNotification('Review approved!', 'success');
+                loadDashboardStats();
+            } catch (error) {
+                console.error('Error approving review:', error);
+                showNotification('Error approving review', 'error');
+            }
+        }
+
+        // Delete review
+        async function deleteReview(reviewId) {
+            if (!confirm('Are you sure you want to delete this review?')) return;
+
+            try {
+                await db.collection('comments').doc(reviewId).delete();
+                showNotification('Review deleted', 'success');
+                loadDashboardStats();
+            } catch (error) {
+                console.error('Error deleting review:', error);
+                showNotification('Error deleting review', 'error');
+            }
+        }
+
+        // Load recent messages
+        async function loadRecentMessages() {
+            try {
+                const messages = await db.collection('contacts')
+                    .orderBy('createdAt', 'desc')
+                    .limit(5)
+                    .get();
+
+                const container = document.getElementById('recentMessages');
+
+                if (messages.empty) {
+                    container.innerHTML = '<p class="text-muted text-center">No messages yet</p>';
+                    return;
+                }
+
+                let html = '';
+                messages.forEach(doc => {
+                    const data = doc.data();
+                    html += `
+              <div style="padding: 1rem; background: var(--color-bg-card); border-radius: var(--radius-md); margin-bottom: 0.8rem; border-left: 3px solid ${data.status === 'unread' ? 'var(--color-primary)' : 'var(--color-text-subtle)'};">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
+                  <strong style="font-size: 1.4rem;">${data.name}</strong>
+                  <span style="font-size: 1.2rem; color: var(--color-text-subtle);">${data.status === 'unread' ? '🔴 New' : ''}</span>
+                </div>
+                <p style="font-size: 1.3rem; color: var(--color-text-muted);">${data.email}</p>
+                <p style="font-size: 1.3rem; color: var(--color-text-subtle); margin-top: 0.5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${data.message}</p>
+              </div>
+            `;
+                });
+
+                container.innerHTML = html;
+
+            } catch (error) {
+                console.error('Error loading messages:', error);
+            }
+        }
+
+        // Load notices
+        async function loadAdminNotices() {
+            try {
+                const notices = await db.collection('notices')
+                    .orderBy('createdAt', 'desc')
+                    .limit(5)
+                    .get();
+
+                const container = document.getElementById('adminNotices');
+
+                if (notices.empty) {
+                    container.innerHTML = '<p class="text-muted text-center">No notices yet</p>';
+                    return;
+                }
+
+                let html = '';
+                notices.forEach(doc => {
+                    const data = doc.data();
+                    html += `
+              <div style="padding: 1rem; background: var(--color-bg-card); border-radius: var(--radius-md); margin-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <strong style="font-size: 1.4rem;">${data.title}</strong>
+                  <p style="font-size: 1.3rem; color: var(--color-text-muted);">${data.message.substring(0, 50)}...</p>
+                </div>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                  <span class="status ${data.active ? 'status--open' : 'status--closed'}">${data.active ? 'Active' : 'Inactive'}</span>
+                  <button class="btn btn__outline btn__sm" onclick="toggleNotice('${doc.id}', ${!data.active})">${data.active ? 'Hide' : 'Show'}</button>
+                </div>
+              </div>
+            `;
+                });
+
+                container.innerHTML = html;
+
+            } catch (error) {
+                console.error('Error loading notices:', error);
+            }
+        }
+
+        // Toggle notice visibility
+        async function toggleNotice(noticeId, active) {
+            try {
+                await db.collection('notices').doc(noticeId).update({ active });
+                showNotification(`Notice ${active ? 'activated' : 'hidden'}`, 'success');
+                loadAdminNotices();
+            } catch (error) {
+                console.error('Error toggling notice:', error);
+                showNotification('Error updating notice', 'error');
+            }
+        }
+
+        // Setup hours form
+        function setupHoursForm() {
+            const container = document.getElementById('hoursInputs');
+
+            let html = '';
+            DAYS.forEach(day => {
+                html += `
+            <div style="display: grid; grid-template-columns: 100px 1fr 1fr auto; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+              <label style="text-transform: capitalize; font-size: 1.3rem;">${day}</label>
+              <input type="time" id="${day}Open" class="form form__input" style="padding: 0.5rem;" value="06:00" />
+              <input type="time" id="${day}Close" class="form form__input" style="padding: 0.5rem;" value="22:00" />
+              <label style="display: flex; align-items: center; gap: 0.3rem; font-size: 1.2rem;">
+                <input type="checkbox" id="${day}Closed" style="width: 16px; height: 16px;" />
+                Closed
+              </label>
+            </div>
+          `;
+            });
+
+            container.innerHTML = html;
+
+            // Load current hours
+            loadCurrentHours();
+        }
+
+        // Load current operating hours
+        async function loadCurrentHours() {
+            try {
+                const doc = await db.collection('settings').doc('operatingHours').get();
+                if (doc.exists) {
+                    const data = doc.data();
+                    DAYS.forEach(day => {
+                        if (data[day]) {
+                            document.getElementById(`${day}Open`).value = data[day].open || '06:00';
+                            document.getElementById(`${day}Close`).value = data[day].close || '22:00';
+                            document.getElementById(`${day}Closed`).checked = data[day].closed || false;
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading hours:', error);
+            }
+        }
+
+        // Handle notice form submission
+        document.getElementById('noticeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            try {
+                showLoader();
+                const user = auth.currentUser;
+
+                await db.collection('notices').add({
+                    title: document.getElementById('noticeTitle').value,
+                    message: document.getElementById('noticeMessage').value,
+                    type: document.getElementById('noticeType').value,
+                    active: true,
+                    createdBy: user.uid,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                hideLoader();
+                showNotification('Notice posted successfully!', 'success');
+                document.getElementById('noticeForm').reset();
+                loadAdminNotices();
+
+            } catch (error) {
+                hideLoader();
+                console.error('Error posting notice:', error);
+                showNotification('Error posting notice', 'error');
+            }
+        });
+
+        // Handle hours form submission
+        document.getElementById('hoursForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            try {
+                showLoader();
+                const user = auth.currentUser;
+
+                const hours = {};
+                DAYS.forEach(day => {
+                    hours[day] = {
+                        open: document.getElementById(`${day}Open`).value,
+                        close: document.getElementById(`${day}Close`).value,
+                        closed: document.getElementById(`${day}Closed`).checked
+                    };
+                });
+
+                hours.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+                hours.updatedBy = user.uid;
+
+                await db.collection('settings').doc('operatingHours').set(hours);
+
+                hideLoader();
+                showNotification('Operating hours updated!', 'success');
+
+            } catch (error) {
+                hideLoader();
+                console.error('Error updating hours:', error);
+                showNotification('Error updating hours', 'error');
+            }
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof auth !== 'undefined') {
+                auth.onAuthStateChanged(async (user) => {
+                    if (!user) {
+                        window.location.href = 'login.html';
+                    } else {
+                        const isAdmin = await checkAdminAccess(user);
+                        if (isAdmin) {
+                            loadDashboardStats();
+                            loadAdminNotices();
+                            setupHoursForm();
+                        }
+                    }
+                });
+            }
+
+            // Animate elements
+            setTimeout(() => {
+                document.querySelectorAll('[data-animate]').forEach(el => {
+                    el.classList.add(el.dataset.animate);
+                });
+            }, 100);
+        });
+    </script>
+</body>
+
+</html>

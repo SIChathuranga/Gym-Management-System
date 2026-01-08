@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description"
+        content="Manage your MFitness profile, view your bookings, and track your fitness journey." />
+    <title>My Profile | MFitness</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="index.css" />
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+
+<body>
+    <!-- LOADER -->
+    <div id="loader">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="header" id="home">
+        <div class="container">
+            <nav class="header-navigation" aria-label="navigation">
+                <a href="index.html" class="logo"><span>M</span>Fitness</a>
+
+                <img src="https://raw.githubusercontent.com/Manoranjan-D/responsive-website-gym/master/img/nav-icon.svg"
+                    alt="navigation icon" class="nav-icon" width="30" height="30" />
+
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#courses">Courses</a></li>
+                    <li><a href="booking.html">Book Session</a></li>
+                    <li id="userMenu" style="display: flex; align-items: center; gap: 1rem;">
+                        <span id="userName" style="color: var(--color-text-muted);">User</span>
+                        <button id="logoutBtn" class="btn btn__outline btn__sm">Logout</button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- PROFILE SECTION -->
+    <main>
+        <section class="section-profile"
+            style="padding-top: calc(var(--header-height) + var(--space-2xl)); min-height: 100vh;">
+            <div class="container">
+                <!-- Profile Header -->
+                <div class="profile-header" data-animate="fadeInScale">
+                    <div class="profile-avatar" id="profileAvatar">U</div>
+                    <div class="profile-info">
+                        <h2 id="profileName">Loading...</h2>
+                        <p id="profileEmail">Loading...</p>
+                        <div style="margin-top: 1rem;">
+                            <span id="membershipStatus" class="status status--open">Active Member</span>
+                        </div>
+                    </div>
+                    <div class="profile-stats">
+                        <div class="profile-stat">
+                            <div class="profile-stat__value" id="totalBookings">0</div>
+                            <div class="profile-stat__label">Bookings</div>
+                        </div>
+                        <div class="profile-stat">
+                            <div class="profile-stat__value" id="totalReviews">0</div>
+                            <div class="profile-stat__label">Reviews</div>
+                        </div>
+                        <div class="profile-stat">
+                            <div class="profile-stat__value" id="memberSince">-</div>
+                            <div class="profile-stat__label">Member Since</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Content Grid -->
+                <div
+                    style="display: grid; grid-template-columns: 1fr 2fr; gap: var(--space-xl); margin-top: var(--space-xl);">
+
+                    <!-- Left Column - Profile Form -->
+                    <div class="admin-card" data-animate="fadeInLeft">
+                        <h3 class="heading heading--3 margin-bottom">Edit Profile</h3>
+
+                        <form id="profileForm" style="display: flex; flex-direction: column; gap: var(--space-md);">
+                            <div>
+                                <label
+                                    style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--color-text-muted);">
+                                    Full Name
+                                </label>
+                                <input type="text" id="editName" class="form form__input" placeholder="Your Name"
+                                    required />
+                            </div>
+
+                            <div>
+                                <label
+                                    style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--color-text-muted);">
+                                    Phone Number
+                                </label>
+                                <input type="tel" id="editPhone" class="form form__input" placeholder="Phone Number" />
+                            </div>
+
+                            <div>
+                                <label
+                                    style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--color-text-muted);">
+                                    Age
+                                </label>
+                                <input type="number" id="editAge" class="form form__input" placeholder="Age" min="13"
+                                    max="100" />
+                            </div>
+
+                            <div>
+                                <label
+                                    style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--color-text-muted);">
+                                    Profession
+                                </label>
+                                <select id="editProfession" class="form form__input">
+                                    <option value="">Select Profession</option>
+                                    <option value="student">Student</option>
+                                    <option value="professional">Working Professional</option>
+                                    <option value="athlete">Athlete</option>
+                                    <option value="homemaker">Homemaker</option>
+                                    <option value="retired">Retired</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label
+                                    style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--color-text-muted);">
+                                    Fitness Goals
+                                </label>
+                                <textarea id="editGoals" class="form form__input"
+                                    placeholder="What are your fitness goals?" rows="3"></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn__primary">Save Changes</button>
+                        </form>
+                    </div>
+
+                    <!-- Right Column - Bookings & Activity -->
+                    <div>
+                        <!-- Upcoming Bookings -->
+                        <div class="admin-card" data-animate="fadeInRight" style="margin-bottom: var(--space-xl);">
+                            <div class="admin-card__header">
+                                <h3 class="admin-card__title">Upcoming Bookings</h3>
+                                <a href="booking.html" class="btn btn__primary btn__sm">Book New</a>
+                            </div>
+                            <div id="upcomingBookings">
+                                <p class="text-muted text-center" style="padding: 2rem;">Loading your bookings...</p>
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div class="admin-card" data-animate="fadeInRight">
+                            <h3 class="heading heading--3 margin-bottom">Quick Actions</h3>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-md);">
+                                <a href="booking.html" class="btn btn__secondary" style="text-align: center;">
+                                    📅 Book Session
+                                </a>
+                                <a href="index.html#courses" class="btn btn__secondary" style="text-align: center;">
+                                    📚 View Courses
+                                </a>
+                                <a href="index.html#trainers" class="btn btn__secondary" style="text-align: center;">
+                                    👤 Our Trainers
+                                </a>
+                                <a href="index.html#contact" class="btn btn__secondary" style="text-align: center;">
+                                    💬 Contact Us
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="section-footer" id="footer" style="padding: 2rem 0;">
+        <div class="container" style="text-align: center;">
+            <p style="color: var(--color-text-subtle); font-size: 1.4rem;">
+                © 2026 MFitness. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/booking.js"></script>
+    <script src="js/main.js"></script>
+
+    <script>
+        // Load profile data
+        async function loadProfileData() {
+            const user = auth.currentUser;
+            if (!user) return;
+
+            try {
+                // Get user profile from Firestore
+                const doc = await db.collection('users').doc(user.uid).get();
+
+                if (doc.exists) {
+                    const data = doc.data();
+
+                    // Update header info
+                    document.getElementById('profileName').textContent = data.name || user.displayName || 'User';
+                    document.getElementById('profileEmail').textContent = user.email;
+                    document.getElementById('profileAvatar').textContent = (data.name || user.displayName || 'U').charAt(0).toUpperCase();
+                    document.getElementById('userName').textContent = data.name || user.displayName || 'User';
+
+                    // Update form fields
+                    document.getElementById('editName').value = data.name || '';
+                    document.getElementById('editPhone').value = data.phone || '';
+                    document.getElementById('editAge').value = data.age || '';
+                    document.getElementById('editProfession').value = data.profession || '';
+                    document.getElementById('editGoals').value = data.fitnessGoals || '';
+
+                    // Update membership status
+                    const status = document.getElementById('membershipStatus');
+                    if (data.membershipStatus === 'active') {
+                        status.textContent = 'Active Member';
+                        status.className = 'status status--open';
+                    } else {
+                        status.textContent = 'Pending';
+                        status.className = 'status status--closed';
+                    }
+
+                    // Update member since
+                    if (data.createdAt) {
+                        const date = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
+                        document.getElementById('memberSince').textContent = date.getFullYear();
+                    }
+                }
+
+                // Get booking count
+                const bookings = await db.collection('bookings')
+                    .where('userId', '==', user.uid)
+                    .get();
+                document.getElementById('totalBookings').textContent = bookings.size;
+
+                // Display upcoming bookings
+                displayUpcomingBookings(bookings);
+
+                // Get review count
+                const reviews = await db.collection('comments')
+                    .where('userId', '==', user.uid)
+                    .get();
+                document.getElementById('totalReviews').textContent = reviews.size;
+
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+
+        function displayUpcomingBookings(snapshot) {
+            const container = document.getElementById('upcomingBookings');
+            const today = new Date().toISOString().split('T')[0];
+
+            const bookings = [];
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                if (data.date >= today && data.status !== 'cancelled') {
+                    bookings.push({ id: doc.id, ...data });
+                }
+            });
+
+            if (bookings.length === 0) {
+                container.innerHTML = `
+            <div class="empty-state" style="padding: 2rem;">
+              <p class="text-muted">No upcoming bookings</p>
+              <a href="booking.html" class="btn btn__primary btn__sm" style="margin-top: 1rem;">Book Now</a>
+            </div>
+          `;
+                return;
+            }
+
+            // Sort by date
+            bookings.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            container.innerHTML = bookings.slice(0, 3).map(booking => `
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--color-bg-card); border-radius: var(--radius-md); margin-bottom: 0.8rem;">
+            <div>
+              <strong style="color: var(--color-text);">${booking.sessionName}</strong>
+              <p style="font-size: 1.3rem; color: var(--color-text-muted);">
+                ${new Date(booking.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} at ${booking.timeSlot}
+              </p>
+            </div>
+            <span class="status status--open">${booking.status}</span>
+          </div>
+        `).join('');
+        }
+
+        // Check authentication on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof auth !== 'undefined') {
+                auth.onAuthStateChanged((user) => {
+                    if (!user) {
+                        window.location.href = 'login.html';
+                    } else {
+                        loadProfileData();
+                    }
+                });
+            }
+
+            // Handle profile form submission
+            const profileForm = document.getElementById('profileForm');
+            profileForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const profileData = {
+                    name: document.getElementById('editName').value,
+                    phone: document.getElementById('editPhone').value,
+                    age: document.getElementById('editAge').value,
+                    profession: document.getElementById('editProfession').value,
+                    fitnessGoals: document.getElementById('editGoals').value
+                };
+
+                await updateUserProfile(profileData);
+                loadProfileData(); // Reload to show updated data
+            });
+
+            // Animate elements
+            setTimeout(() => {
+                document.querySelectorAll('[data-animate]').forEach(el => {
+                    el.classList.add(el.dataset.animate);
+                });
+            }, 100);
+        });
+    </script>
+</body>
+
+</html>
