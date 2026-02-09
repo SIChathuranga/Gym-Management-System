@@ -10,8 +10,9 @@ import firebase_admin
 from firebase_admin import credentials, firestore, auth
 from datetime import datetime
 import os
+import json
 
-from config import Config, CORS_ORIGINS, FIREBASE_CREDENTIALS_PATH
+from config import Config, CORS_ORIGINS, FIREBASE_CREDENTIALS_PATH, FIREBASE_CREDENTIALS_JSON
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -20,13 +21,25 @@ CORS(app, origins=CORS_ORIGINS)
 
 # Initialize Firebase Admin SDK
 try:
-    cred = credentials.Certificate(FIREBASE_CREDENTIALS_PATH)
+    # Check if credentials are provided via environment variable (for Render)
+    if FIREBASE_CREDENTIALS_JSON:
+        cred_dict = json.loads(FIREBASE_CREDENTIALS_JSON)
+        cred = credentials.Certificate(cred_dict)
+        print("✅ Using Firebase credentials from environment variable")
+    elif os.path.exists(FIREBASE_CREDENTIALS_PATH):
+        # Use local file for development
+        cred = credentials.Certificate(FIREBASE_CREDENTIALS_PATH)
+        print("✅ Using Firebase credentials from local file")
+    else:
+        raise FileNotFoundError("No Firebase credentials found")
+    
     firebase_admin.initialize_app(cred)
     db = firestore.client()
     print("✅ Firebase initialized successfully!")
 except Exception as e:
     print(f"⚠️ Firebase initialization failed: {e}")
-    print("Please ensure serviceAccountKey.json is in the backend folder")
+    print("For local development: ensure serviceAccountKey.json is in the backend folder")
+    print("For Render: set FIREBASE_CREDENTIALS environment variable with the JSON content")
     db = None
 
 # ============================================

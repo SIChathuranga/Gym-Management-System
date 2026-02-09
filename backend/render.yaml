@@ -1,0 +1,20 @@
+# Render Blueprint Configuration for MFitness Backend
+# This file helps configure the deployment on Render
+
+services:
+  - type: web
+    name: mfitness-backend
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.0"
+      - key: DEBUG
+        value: "false"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: FIREBASE_CREDENTIALS
+        sync: false # You'll need to set this manually with your Firebase credentials JSON
+      - key: CORS_ADDITIONAL_ORIGINS
+        sync: false # Set this to your Vercel URL after deployment
