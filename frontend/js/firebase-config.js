@@ -14,12 +14,12 @@
 
 // Firebase configuration - REPLACE WITH YOUR OWN CONFIG
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyCK0C8yp9c7jaFUsQ0acf-ls4uQVbHgfyU",
+    authDomain: "mfitness-gym-management-system.firebaseapp.com",
+    projectId: "mfitness-gym-management-system",
+    storageBucket: "mfitness-gym-management-system.firebasestorage.app",
+    messagingSenderId: "620753331997",
+    appId: "1:620753331997:web:15821a5faa8318a82f63f4"
 };
 
 // API Base URL - Auto-detect environment
