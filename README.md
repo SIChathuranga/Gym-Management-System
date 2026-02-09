@@ -862,6 +862,10 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ---
 
+## 👥 Authors
+
+- Sanindu Imasha Chathuranga - All Rights Reserved.
+
 ## 🙏 Credits
 
 - **Images**: [Unsplash](https://unsplash.com/)
