@@ -26,7 +26,7 @@ const firebaseConfig = {
 // Replace 'YOUR_RENDER_URL' with your actual Render backend URL after deployment
 const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:5000/api'
-    : 'https://YOUR_RENDER_URL.onrender.com/api';
+    : 'https://mfitness-backend-djgr.onrender.com/api';
 
 // Initialize Firebase
 let app, auth, db;
